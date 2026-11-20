@@ -1,0 +1,123 @@
+<!doctype html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only | Copyright (C) 2026 the Advent Calendar authors. See LICENSE. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Advent Calendar</title>
+<meta name="description" content="An advent calendar. One door opens each day from December 1 to 24, and the best ones are saved for the end.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Advent Calendar">
+<meta property="og:description" content="One door opens each day from December 1 to 24, and the best ones are saved for the end.">
+<meta property="og:image" content="/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A grid of wrapped advent calendar doors numbered 1 to 24 with door 24 wrapped in gold">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="/og.png">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="/calendar.css?v=11">
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <header class="cal-head" role="banner">
+    <a class="lockup standalone-only" href="/" aria-label="Advent Calendars, home">
+      <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="11" fill="#C97B5F"/><rect x="9" y="13" width="22" height="18" rx="3" fill="#FBF3E9"/><rect x="18.5" y="13" width="3" height="18" fill="#E8B04B"/><rect x="9" y="19.5" width="22" height="3" fill="#E8B04B"/><path d="M20 13c-3-5-8-4-7-1 1 2 5 1 7 1zm0 0c3-5 8-4 7-1-1 2-5 1-7 1z" fill="#E8B04B"/></svg>
+      <span class="wordmark">Advent <span class="pop">Calendars</span></span>
+    </a>
+    <h1 class="cal-title" id="calTitle">Advent Calendar</h1>
+    <p class="cal-sub" id="calSub"></p>
+    <p class="cal-status" id="calStatus" aria-live="polite"></p>
+  </header>
+
+  <main id="main">
+    <!-- Grid view -->
+    <section id="gridView" aria-label="Calendar doors">
+      <div class="stampbar" id="stampbar" hidden>
+        <div class="sock" id="sock" role="button" tabindex="0" aria-label="Sock, your stocking. Tap for a word from Sock.">
+          <svg viewBox="0 0 96 150" aria-hidden="true">
+            <defs><clipPath id="sockClip"><path d="M18 30h56v62c0 8 2 12 8 18 10 10 6 32-14 34-12 1-22-6-32-14-10-8-18-16-18-30z"/></clipPath></defs>
+            <path class="sk-body" d="M18 30h56v62c0 8 2 12 8 18 10 10 6 32-14 34-12 1-22-6-32-14-10-8-18-16-18-30z"/>
+            <g clip-path="url(#sockClip)"><rect class="sk-fill" id="sockFill" x="0" y="150" width="110" height="150"/>
+              <g class="sk-gifts" id="sockGifts"></g></g>
+            <path class="sk-stripe" d="M18 58h56v10H18zM18 80h56v8H18z"/>
+            <path class="sk-toe" d="M56 120c6 2 16 6 24 2" fill="none" stroke-width="8" stroke-linecap="round"/>
+            <g class="sk-pop" id="sockPop"></g>
+            <rect class="sk-cuff" x="10" y="8" width="72" height="26" rx="13"/>
+            <circle cx="20" cy="20" r="4" fill="#fff" opacity=".7"/>
+            <g class="sk-face"><g class="sk-eyes"><ellipse cx="34" cy="46" rx="6" ry="7.5"/><ellipse cx="60" cy="46" rx="6" ry="7.5"/></g>
+              <circle cx="36.5" cy="42.5" r="2.4" fill="#fff"/><circle cx="62.5" cy="42.5" r="2.4" fill="#fff"/>
+              <path class="sk-mouth" id="sockMouth" d="M41 55q6 6 12 0" fill="none" stroke-width="2.6" stroke-linecap="round"/></g>
+          </svg>
+        </div>
+        <div class="sock-talk">
+          <p class="bubble" id="sockSays" aria-live="polite"></p>
+          <div class="stamp-count"><span id="stampN">0</span> of 24 doors opened</div>
+        </div>
+      </div>
+      <form class="esign" id="esign" hidden novalidate>
+        <h2 class="esign-h" id="esignH">Don't miss a door</h2>
+        <div class="esign-body" id="esignBody">
+          <label class="sr-only" for="esEmail">Your email</label>
+          <input class="esign-email" id="esEmail" type="email" autocomplete="email" inputmode="email" placeholder="your email" maxlength="254" required>
+          <div class="esign-picks" role="group" aria-labelledby="esignH">
+            <label><input type="checkbox" id="esLaunch" checked> Email me when the calendar opens Dec 1</label>
+            <label><input type="checkbox" id="esDaily"> Email me each morning when a new door opens</label>
+            <label hidden><input type="checkbox" id="esNews"> <span id="esNewsLabel">Also send me the newsletter</span></label>
+          </div>
+          <div class="esign-hp" aria-hidden="true"><label for="esWebsite">Leave this empty</label><input id="esWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+          <div class="esign-ts" id="esTs" hidden></div>
+          <button class="btn" type="submit" id="esGo">Remind me</button>
+          <p class="esign-fine">Advent emails stop after Dec 24. Unsubscribe anytime. We'll send one email to confirm first. <a href="/legal/privacy" target="_blank" rel="noopener">Privacy</a></p>
+        </div>
+        <p class="esign-msg" id="esMsg" role="status" aria-live="polite"></p>
+      </form>
+      <div class="grid" id="grid">
+        <!-- skeleton doors until the calendar loads -->
+      </div>
+      <div class="remind" id="remind" hidden>
+        <p class="remind-lede">Rather not get email? Add a daily 9am reminder to your own calendar instead.</p>
+        <div class="remind-btns">
+          <a class="btn ghost" id="icsBtn" href="#" rel="noopener noreferrer">Apple or Outlook</a>
+          <a class="btn ghost" id="gcalBtn" href="#" target="_blank" rel="noopener noreferrer">Google Calendar</a>
+        </div>
+      </div>
+      <div class="demo-tools" id="demoTools" hidden>
+        <button class="btn ghost" id="resetDemo" type="button">Close all the doors again</button>
+      </div>
+    </section>
+
+    <!-- Door view (swaps in place of the grid, so Back closes it) -->
+    <section id="doorView" hidden aria-live="polite">
+      <button class="back" id="backBtn" type="button">Back to the calendar</button>
+      <article class="door-card" id="doorCard"></article>
+    </section>
+
+    <!-- Not found / error states -->
+    <section id="msgView" hidden>
+      <div class="msg-card" id="msgCard"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a class="powered" href="https://advent.jenbuiltit.com/" target="_blank" rel="noopener noreferrer">Advent calendar by Jen Built It</a> <span aria-hidden="true">&middot;</span> <a class="powered" href="https://github.com/jensoltys/adventcalendar" target="_blank" rel="noopener noreferrer">Source code</a>
+    <div class="standalone-only foot-legal">
+      <span>&copy; <span id="yr">2026</span> YOUR BUSINESS NAME, YOUR BUSINESS ADDRESS</span>
+      <nav aria-label="Legal">
+        <a href="/legal/privacy">Privacy</a>
+        <a href="/legal/terms">Terms</a>
+        <a href="/legal/do-not-sell">Do Not Sell or Share My Personal Information</a>
+        <a href="mailto:you@example.com">Contact</a>
+      </nav>
+    </div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+<script src="/nudges.js?v=3"></script>
+<script src="/calendar.js?v=11"></script>
+</body>
+</html>

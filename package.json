@@ -1,0 +1,20 @@
+{
+  "name": "adventcalendar",
+  "version": "1.0.0",
+  "description": "Embeddable advent calendar: 24 doors that open one a day, with games, one-day codes, reminder emails and an /admin editor. Cloudflare Workers + D1.",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "repository": { "type": "git", "url": "git+https://github.com/jensoltys/adventcalendar.git" },
+  "homepage": "https://github.com/jensoltys/adventcalendar#readme",
+  "bugs": { "url": "https://github.com/jensoltys/adventcalendar/issues" },
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "4.156.0"
+  }
+}

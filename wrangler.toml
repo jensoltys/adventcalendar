@@ -1,0 +1,56 @@
+# SPDX-License-Identifier: AGPL-3.0-only
+# Copyright (C) 2026 the Advent Calendar authors. See LICENSE.
+# Advent Calendar: Cloudflare Worker + D1. See README.md for setup.
+name = "advent-calendar"
+main = "src/worker.js"
+compatibility_date = "2025-07-08"
+workers_dev = true
+
+# Using your own domain? Uncomment and change:
+# routes = [{ pattern = "advent.example.com", custom_domain = true }]
+
+[vars]
+# Your site's address, no trailing slash. Sign-ups only work from this origin.
+APP_URL = "https://advent-calendar.YOUR-SUBDOMAIN.workers.dev"
+# Sites allowed to show a calendar in an iframe, with spaces or commas between them. Blank = only this site.
+EMBED_ORIGINS = ""
+# Sites a calendar may name as its home page (shared door links land there), like "myblog.com, shop.myblog.com".
+# Set the page itself in /admin, under "Post link".
+HOME_HOSTS = ""
+# Your own sites, comma-separated: links to them get no "affiliate" label.
+OWN_HOSTS = ""
+# Sites where Amazon-style affiliate links may show (exact origins, like https://myblog.com).
+AFFILIATE_ORIGINS = ""
+# Reminder emails (Resend). Blank EMAIL_FROM = no emails are sent and the sign-up box stays hidden.
+EMAIL_FROM = ""                 # e.g. noreply@example.com, on a domain you verified in Resend
+EMAIL_FROM_NAME = ""            # blank = the calendar's title
+MAIL_ADDRESS = ""               # your business name and postal address, printed in every email
+ALERT_EMAIL = ""                # where sign-up and cap alerts go. Blank = no alerts
+NEWSLETTER_NAME = ""            # set it to show an "also send me the ... newsletter" box
+SECURITY_CONTACT = ""           # email for /.well-known/security.txt. Blank = no file
+
+# Secrets (npx wrangler secret put NAME): JWT_SECRET, ADMIN_API_TOKEN, RESEND_API_KEY,
+# and optionally TURNSTILE_SITEKEY + TURNSTILE_SECRET (bot check on the reminder box).
+
+# Hourly: send the reminder emails that are due (7am in each subscriber's own zone).
+[triggers]
+crons = ["7 * * * *"]
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+# Run the Worker for EVERY request so security headers land on static assets too.
+run_worker_first = true
+not_found_handling = "404-page"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "advent-calendar-db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"   # from: npx wrangler d1 create advent-calendar-db
+
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = false

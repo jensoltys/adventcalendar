@@ -1,0 +1,6 @@
+# Copy to .dev.vars for local dev. Never commit .dev.vars.
+# Make each one with: openssl rand -base64 48
+JWT_SECRET=
+ADMIN_API_TOKEN=
+# Optional. Without it (and EMAIL_FROM in wrangler.toml), the email reminder box stays hidden.
+RESEND_API_KEY=

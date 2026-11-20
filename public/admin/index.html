@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: AGPL-3.0-only | Copyright (C) 2026 the Advent Calendar authors. See LICENSE. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advent Calendars admin</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#10221C">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+<main class="shell">
+  <div class="top"><a class="home" href="/">&larr; Your calendars</a><button class="btn ghost small" type="button" id="signOut">Sign out</button><h1>Advent <span class="pop">Calendars</span></h1></div>
+
+  <section id="loginView" hidden aria-labelledby="loginHead">
+    <form class="panel" id="loginForm" novalidate>
+      <h2 id="loginHead">Sign in</h2>
+      <p>Paste the admin token you set with <code>wrangler secret put ADMIN_API_TOKEN</code>. It stays in this tab only.</p><br>
+      <div class="field"><label for="loginToken">Admin token</label><input id="loginToken" type="password" autocomplete="current-password" maxlength="200"></div>
+      <p class="msg bad" id="loginMsg" role="alert"></p>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <section id="dashView" hidden aria-label="Calendars">
+    <div class="tabs" role="tablist" id="tabs" aria-label="Calendars"></div>
+    <div id="calPanel"><div class="panel"><div class="skel"></div></div></div>
+  </section>
+
+  <section id="addView" hidden aria-labelledby="addHead">
+    <button class="btn ghost small back" id="addBack" type="button">&larr; Back</button>
+    <form class="panel" id="addForm" novalidate>
+      <h2 id="addHead">Add a calendar</h2>
+      <p>It starts hidden with 24 empty doors, so nobody sees it until you turn it on.</p><br>
+      <div class="add-row">
+        <div class="field"><label for="a_title">Calendar name</label><input id="a_title" maxlength="100" placeholder="My Advent Calendar"></div>
+        <div class="field"><label for="a_sub">Line under the title</label><input id="a_sub" maxlength="200" placeholder="One door a day until Christmas Eve."></div>
+      </div>
+      <fieldset class="looks" id="addLooks"><legend>Look</legend></fieldset>
+      <p class="msg" id="addMsg" role="alert"></p>
+      <button class="btn" type="submit" id="addBtn">Add the calendar</button>
+    </form>
+  </section>
+
+  <section id="editView" hidden aria-labelledby="editHead">
+    <button class="btn ghost small back" id="editBack" type="button">&larr; Back to all doors</button>
+    <form class="panel" id="doorForm" novalidate>
+      <h2 id="editHead">Door</h2>
+      <p id="editSub"></p><br>
+      <div class="editor">
+        <div class="field"><label for="f_type">What's behind it</label>
+          <select id="f_type">
+            <option value="">Nothing yet (shows "still being wrapped")</option>
+            <option value="tool">Free tool</option>
+            <option value="code">Discount code</option>
+            <option value="unlock">App bonus (something extra inside an app)</option>
+            <option value="deal">Deal</option>
+            <option value="gift">Gift pick</option>
+            <option value="tip">Tip</option>
+            <option value="download">Free download (printable, file or picture)</option>
+            <option value="play">Play (a little game inside the door)</option>
+            <option value="sponsored">Sponsored (brand door, marked as an ad)</option>
+            <option value="surprise">Surprise</option>
+          </select></div>
+        <div class="field" id="sponsorField"><label for="f_sponsor">Brand name</label><input id="f_sponsor" maxlength="80"><span class="hint">Shows as "Ad: sponsored by ..." at the top of the door.</span></div>
+        <div class="field" id="playField"><label for="f_play">Which game</label>
+          <select id="f_play">
+            <option value="pick">Draw a card (one item at random, draw again)</option>
+            <option value="spin">Spin the wheel (up to 12 items)</option>
+            <option value="scratch">Scratch-off (scratch to find one item)</option>
+            <option value="shake">Shake the box (lines are "clue | answer")</option>
+            <option value="wallpaper">Make a lock screen (lines are suggested words)</option>
+          </select></div>
+        <div class="field full" id="playItemsField"><label for="f_play_items">Game items, one per line</label><textarea id="f_play_items" maxlength="2000" placeholder="Text a friend you miss&#10;Take a 10 minute walk&#10;Write down one good thing"></textarea><span class="hint">Each line is one card, slice of the wheel, scratch-off message, box to shake, or word idea.</span></div>
+        <div class="field full"><label for="f_title">Title</label><input id="f_title" maxlength="120"></div>
+        <div class="field full"><label for="f_blurb">What to say</label><textarea id="f_blurb" maxlength="600"></textarea></div>
+        <div class="field"><label for="f_cta_url" id="ctaLabel">Button link</label><input id="f_cta_url" inputmode="url" maxlength="500" placeholder="https://"><span class="hint" id="ctaHint" hidden>The file to download. Put files in public/doors/ and redeploy, then a link like /doors/my-file.pdf works.</span></div>
+        <div class="field"><label for="f_cta_label">Button words</label><input id="f_cta_label" maxlength="40" placeholder="Open the tool"></div>
+        <div class="field"><label for="f_code">Code</label><input id="f_code" maxlength="40"></div>
+        <div class="field"><label for="f_code_note">Code note</label><input id="f_code_note" maxlength="160" placeholder="Good through December 5"></div>
+        <div class="field full"><label for="f_review_url">Review link</label><input id="f_review_url" type="url" inputmode="url" maxlength="500" placeholder="https://"><span class="hint">Amazon links only show when the calendar is embedded on one of your AFFILIATE_ORIGINS sites, with the Amazon line. Everywhere else the door shows this review link instead.</span></div>
+        <div class="field"><label for="f_image_url">Picture link</label><input id="f_image_url" type="url" inputmode="url" maxlength="500" placeholder="https://"></div>
+        <div class="field"><label for="f_image_alt">Picture description (alt text)</label><input id="f_image_alt" maxlength="200"></div>
+      </div>
+      <p class="msg" id="doorMsg" role="alert"></p>
+      <div class="row"><button class="btn" type="submit" id="saveDoor">Save door</button><button class="btn ghost small" type="button" id="previewDoor">Preview the calendar</button></div>
+    </form>
+  </section>
+</main>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/admin/admin.js"></script>
+</body>
+</html>
